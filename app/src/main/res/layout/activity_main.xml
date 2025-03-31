@@ -6,33 +6,41 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <!-- Вложенный LinearLayout для кнопок -->
-    <LinearLayout
-        android:orientation="horizontal"
+    <EditText
+        android:id="@+id/etUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
+        android:hint="Enter Username"
+        android:textSize="16sp"/>
 
-        <Button
-            android:id="@+id/btnWriteFile"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Write File" />
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Email"
+        android:textSize="16sp"
+        android:inputType="textEmailAddress"/>
 
-        <Button
-            android:id="@+id/btnReadFile"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Read File" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Data"
+        android:textSize="18sp"/>
+
+    <Button
+        android:id="@+id/btnLoad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Load Data"
+        android:textSize="18sp"/>
 
     <TextView
-        android:id="@+id/tvData"
+        android:id="@+id/tvResult"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Data will appear here"
-        android:textSize="16sp" />
+        android:text="Stored Data Will Appear Here"
+        android:textSize="16sp"
+        android:paddingTop="10dp"/>
 
 </LinearLayout>

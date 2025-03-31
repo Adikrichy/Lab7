@@ -1,7 +1,9 @@
 package com.example.myapplication7
+
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -13,7 +15,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var edConfirmPassword: EditText
     private lateinit var btnCreateUser: Button
 
-    private val CREDENTIAL_SHARED_PREF = "our_shared_pref"
+    private val credentialSharedPref = "our_shared_pref"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,21 +27,49 @@ class SignUpActivity : AppCompatActivity() {
         btnCreateUser = findViewById(R.id.btn_create_user)
 
         btnCreateUser.setOnClickListener {
-            val username = edUsername.text.toString()
-            val password = edPassword.text.toString()
-            val confirmPassword = edConfirmPassword.text.toString()
+            val strUsername = edUsername.text.toString().trim()
+            val strPassword = edPassword.text.toString().trim()
+            val strConfirmPassword = edConfirmPassword.text.toString().trim()
 
-            if (password == confirmPassword) {
-                val credentials = getSharedPreferences(CREDENTIAL_SHARED_PREF, Context.MODE_PRIVATE).edit()
-                credentials.putString("Username", username)
-                credentials.putString("Password", password)
-                credentials.apply()
+            when {
+                // Проверка пустых полей
+                strUsername.isEmpty() -> {
+                    edUsername.error = "Введите имя"
+                    return@setOnClickListener
+                }
+                strPassword.isEmpty() -> {
+                    edPassword.error = "Введите пароль"
+                    return@setOnClickListener
+                }
+                strConfirmPassword.isEmpty() -> {
+                    edConfirmPassword.error = "Подтвердите пароль"
+                    return@setOnClickListener
+                }
 
-                Toast.makeText(this, "User Registered!", Toast.LENGTH_SHORT).show()
-                finish()
-            } else {
-                Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
+                // Проверка совпадения паролей (с учетом регистра)
+                strPassword != strConfirmPassword -> {
+                    edConfirmPassword.error = "Пароли должны совпадать"
+                    Toast.makeText(this, "Пароли не совпадают", Toast.LENGTH_SHORT).show()
+                }
+
+                // Успешная регистрация
+                else -> {
+                    saveCredentials(strUsername, strPassword)
+                    Toast.makeText(this, "Успешная регистрация!", Toast.LENGTH_SHORT).show()
+
+                    // Закрытие через 1.5 секунды
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        finish()
+                    }, 1500)
+                }
             }
         }
+    }
+
+    private fun saveCredentials(username: String, password: String) {
+        getSharedPreferences(credentialSharedPref, Context.MODE_PRIVATE).edit()
+            .putString("Username", username)
+            .putString("Password", password)
+            .apply()
     }
 }

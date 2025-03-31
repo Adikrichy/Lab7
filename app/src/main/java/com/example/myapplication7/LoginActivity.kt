@@ -1,13 +1,12 @@
 package com.example.myapplication7
-
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var edUsername: EditText
@@ -15,7 +14,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var btnLogin: Button
     private lateinit var btnSignUp: Button
 
-    private val CREDENTIAL_SHARED_PREF = "our_shared_pref"
+    private val credentialSharedPref = "our_shared_pref"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,22 +26,28 @@ class LoginActivity : AppCompatActivity() {
         btnSignUp = findViewById(R.id.btn_signup)
 
         btnSignUp.setOnClickListener {
-            startActivity(Intent(this, SignUpActivity::class.java))
+            val intent = Intent(this, SignUpActivity::class.java)
+            startActivity(intent)
         }
 
         btnLogin.setOnClickListener {
-            val credentials = getSharedPreferences(CREDENTIAL_SHARED_PREF, Context.MODE_PRIVATE)
-            val storedUsername = credentials.getString("Username", null)
-            val storedPassword = credentials.getString("Password", null)
+            val credentials = getSharedPreferences(credentialSharedPref, Context.MODE_PRIVATE)
+            val strUsername = credentials.getString("Username", null)
+            val strPassword = credentials.getString("Password", null)
 
-            val inputUsername = edUsername.text.toString()
-            val inputPassword = edPassword.text.toString()
+            val usernameFromEd = edUsername.text.toString()
+            val passwordFromEd = edPassword.text.toString()
 
-            if (storedUsername == inputUsername && storedPassword == inputPassword) {
-                Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+            if (strUsername != null && usernameFromEd.equals(strUsername, ignoreCase = true)) {
+                if (strPassword != null && passwordFromEd.equals(strPassword, ignoreCase = true)) {
+                    Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show()
+                }
             } else {
                 Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show()
             }
         }
     }
 }
+
